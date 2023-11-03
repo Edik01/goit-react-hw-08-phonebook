@@ -14,7 +14,7 @@ export const ContactForm = ({ onSubmit }) => {
     event.preventDefault();
     const newContact = {
       name,
-      phone: number,
+      number,
       id: nanoid(),
     };
     if (
