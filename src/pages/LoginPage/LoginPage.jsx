@@ -1,18 +1,14 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { fetchRegister } from 'redux/auth/operations';
+import { fetchLogin } from 'redux/auth/operations';
 // import { register } from 'services/contactsApi';
 
-const RegisterPage = () => {
-  const [name, setName] = useState('');
+const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const dispatch = useDispatch();
   const handleChange = ({ target: { name: propName, value } }) => {
     switch (propName) {
-      case 'name':
-        setName(value);
-        break;
       case 'email':
         setEmail(value);
         break;
@@ -26,14 +22,10 @@ const RegisterPage = () => {
   };
   const handleSubmit = event => {
     event.preventDefault();
-    dispatch(fetchRegister({ name, email, password }));
+    dispatch(fetchLogin({ email, password }));
   };
   return (
     <form onSubmit={handleSubmit}>
-      <label>
-        <input onChange={handleChange} name="name" type="text" value={name} />
-        Name
-      </label>
       <label>
         <input
           onChange={handleChange}
@@ -52,9 +44,9 @@ const RegisterPage = () => {
         />
         Password
       </label>
-      <button type="submit">Register</button>
+      <button type="submit">Login</button>
     </form>
   );
 };
 
-export default RegisterPage;
+export default LoginPage;

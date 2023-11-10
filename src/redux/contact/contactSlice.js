@@ -2,51 +2,53 @@ import {
   fetchAddContact,
   fetchAllContacts,
   fetchDeleteContact,
-} from 'redux/operations';
+} from 'redux/contact/operations';
 
 const { createSlice } = require('@reduxjs/toolkit');
 
 const contactSlice = createSlice({
   name: 'contacts',
-  initialState: { items: [], filter: '' },
+  initialState: { items: [], filter: '', error: null, isLoading: false },
   reducers: {
     changeFilter: (state, action) => {
       state.filter = action.payload;
     },
   },
-  extraReducers:
-    //   addContact: (state, action) => {
-    //     state.items = [...state.items, action.payload];
-    //   },
-    //   changeFilter: (state, action) => {
-    //     state.filter = action.payload;
-    //   },
-    //   deleteContact: (state, action) => {
-    //     state.items = state.items.filter(contact => {
-    //       return contact.id !== action.payload;
-    //     });
-    //   },
-    // },
-    builder => {
-      builder
-        .addCase(fetchAllContacts.fulfilled, (state, action) => {
-          // action is inferred correctly here
-          state.items = [...state.items, ...action.payload];
-        })
-        // You can chain calls, or have separate `builder.addCase()` lines each time
-        .addCase(fetchAddContact.fulfilled, (state, action) => {
-          state.items = [...state.items, action.payload];
-        })
-        .addCase(fetchDeleteContact.fulfilled, (state, action) => {
-          state.items = state.items.filter(contact => {
-            return contact.id !== action.payload.id;
-          });
-        });
+  extraReducers: builder => {
+    builder
+      .addCase(fetchAllContacts.fulfilled, (state, action) => {
+        // action is inferred correctly here
 
-      // You can apply a "matcher function" to incoming actions
-      // .addMatcher(isActionWithNumberPayload, (state, action) => {})
-      // and provide a default case if no other handlers matched
-    },
+        state.items = action.payload;
+        state.isLoading = false;
+      })
+      // You can chain calls, or have separate builder.addCase() lines each time
+      .addCase(fetchAddContact.fulfilled, (state, action) => {
+        state.items = [...state.items, action.payload];
+        state.isLoading = false;
+      })
+      .addCase(fetchDeleteContact.fulfilled, (state, action) => {
+        state.items = state.items.filter(contact => {
+          return contact.id !== action.payload.id;
+        });
+        state.isLoading = false;
+      })
+      .addMatcher(
+        action => action.type.endsWith('/rejected'),
+        (state, action) => {
+          state.error = action.payload;
+          state.isLoading = false;
+        }
+      )
+      .addMatcher(
+        action => action.type.endsWith('/pending'),
+        (state, action) => {
+          state.error = action.payload;
+          state.isLoading = true;
+          state.error = null;
+        }
+      );
+  },
 });
 
 export const { changeFilter } = contactSlice.actions;
