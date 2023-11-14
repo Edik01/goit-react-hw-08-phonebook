@@ -6,16 +6,12 @@ import { fetchAllContacts } from 'redux/contact/operations';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { selectFilteredContacts } from 'redux/contact/selectors';
-import { selectIsRefresh } from 'redux/auth/selectors';
 
 const ContactsPage = () => {
   const dispatch = useDispatch();
-  const isRefresh = useSelector(selectIsRefresh);
   useEffect(() => {
-    if (!isRefresh) return;
-
     dispatch(fetchAllContacts());
-  }, [dispatch, isRefresh]);
+  }, [dispatch]);
   const filteredContacts = useSelector(selectFilteredContacts);
   return (
     <>

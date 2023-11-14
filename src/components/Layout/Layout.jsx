@@ -3,16 +3,16 @@ import { Suspense } from 'react';
 import { Outlet } from 'react-router-dom';
 import { UserMenu } from 'components/UserMenu/UserMenu';
 import { useSelector } from 'react-redux';
-import { selectToken } from 'redux/auth/selectors';
+import { selectIsLogin } from 'redux/auth/selectors';
 
 const Layout = () => {
-  const token = useSelector(selectToken);
+  const isLogin = useSelector(selectIsLogin);
 
   return (
     <>
       <header>
         <Nav />
-        {token && <UserMenu />}
+        {isLogin && <UserMenu />}
       </header>
       <Suspense>
         <Outlet />

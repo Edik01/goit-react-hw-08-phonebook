@@ -1,30 +1,30 @@
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { selectToken } from 'redux/auth/selectors';
+import { LinkStyled, List } from './Nav.styled';
 
 export const Nav = () => {
   const token = useSelector(selectToken);
   return (
-    <ul>
+    <List>
       <li>
-        <Link to="/">Home</Link>
+        <LinkStyled to="/">Home</LinkStyled>
       </li>
       {!token && (
         <>
           {' '}
           <li>
-            <Link to="/register">Register</Link>
+            <LinkStyled to="/register">Register</LinkStyled>
           </li>
           <li>
-            <Link to="/login ">Login</Link>
+            <LinkStyled to="/login ">Login</LinkStyled>
           </li>{' '}
         </>
       )}
       {token && (
         <li>
-          <Link to="/contacts">Contacts</Link>
+          <LinkStyled to="/contacts">Contacts</LinkStyled>
         </li>
       )}
-    </ul>
+    </List>
   );
 };

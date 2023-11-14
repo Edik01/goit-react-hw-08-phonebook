@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { fetchLogin } from 'redux/auth/operations';
+import { Input, Label } from './LoginPage.styled';
 // import { register } from 'services/contactsApi';
 
 const LoginPage = () => {
@@ -26,24 +27,24 @@ const LoginPage = () => {
   };
   return (
     <form onSubmit={handleSubmit}>
-      <label>
-        <input
+      <Label>
+        Email{' '}
+        <Input
           onChange={handleChange}
           name="email"
           type="email"
           value={email}
         />
-        Email
-      </label>
-      <label>
-        <input
+      </Label>
+      <Label>
+        Password{' '}
+        <Input
           onChange={handleChange}
           name="password"
           type="password"
           value={password}
         />
-        Password
-      </label>
+      </Label>
       <button type="submit">Login</button>
     </form>
   );

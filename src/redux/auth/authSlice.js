@@ -9,7 +9,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const authSlice = createSlice({
   name: 'auth',
-  initialState: { user: null, token: null, isRefresh: false },
+  initialState: { user: null, token: null, isRefresh: false, isLogin: false },
 
   extraReducers: builder => {
     builder
@@ -17,17 +17,32 @@ const authSlice = createSlice({
         // action is inferred correctly here
         state.user = action.payload.user;
         state.token = action.payload.token;
+        state.isLogin = true;
       })
       .addCase(fetchLogin.fulfilled, (state, action) => {
         // action is inferred correctly here
         state.user = action.payload.user;
         state.token = action.payload.token;
+        state.isLogin = true;
       })
 
+      .addCase(fetchRefresh.pending, (state, action) => {
+        // action is inferred correctly here
+        state.isRefresh = true;
+        // state.token = action.payload.token;
+      })
       .addCase(fetchRefresh.fulfilled, (state, action) => {
         // action is inferred correctly here
-        state.user = action.payload.user;
-        state.isRefresh = true;
+        state.user = action.payload;
+        state.isRefresh = false;
+        state.isLogin = true;
+
+        // state.token = action.payload.token;
+      })
+      .addCase(fetchRefresh.rejected, (state, action) => {
+        // action is inferred correctly here
+
+        state.isRefresh = false;
         // state.token = action.payload.token;
       })
 
@@ -35,15 +50,22 @@ const authSlice = createSlice({
         // action is inferred correctly here
         state.user = null;
         state.token = null;
+        state.isLogin = false;
       })
       // You can chain calls, or have separate `builder.addCase()` lines each time
 
       .addMatcher(
         action => action.type.endsWith('/pending'),
         (state, action) => {
-          state.error = action.payload;
           state.isLoading = true;
           state.error = null;
+        }
+      )
+      .addMatcher(
+        action => action.type.endsWith('/rejected'),
+        (state, action) => {
+          state.isLoading = false;
+          state.error = action.payload;
         }
       );
 
